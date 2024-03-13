@@ -178,9 +178,7 @@ class _CartPageState extends State<CartPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(
-                                  height:
-                                      8.0), // Adjust the height spacing as needed
+                              SizedBox(height: 8.0),
                               Text(
                                 item['productDescription'],
                                 style: customTextStyle.copyWith(
@@ -188,9 +186,7 @@ class _CartPageState extends State<CartPage> {
                                   fontSize: 12.0, // Font size small
                                 ),
                               ),
-                              SizedBox(
-                                  height:
-                                      8.0), // Adjust the height spacing as needed
+                              SizedBox(height: 8.0),
                               Text(
                                 ' \$${item['productPrice']}',
                                 style: customTextStyle.copyWith(
@@ -223,10 +219,9 @@ class _CartPageState extends State<CartPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Rounded Incrementer
+                              // Incrementer
                               GestureDetector(
                                 onTap: () {
-                                  // Add your logic to handle incrementing the quantity
                                   updateQuantity(
                                       productId, item['quantity'] + 1);
                                 },
@@ -257,10 +252,9 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
 
-                              // Rounded Decrementer
+                              // Decrementer
                               GestureDetector(
                                 onTap: () {
-                                  // Add your logic to handle decrementing the quantity
                                   if (item['quantity'] > 1) {
                                     updateQuantity(
                                         productId, item['quantity'] - 1);
@@ -429,14 +423,14 @@ class _CartPageState extends State<CartPage> {
   }
 
   void updateQuantity(String productId, int newQuantity) {
-    // Ensure the product exists in the cart
+    // Ensuring the product exists in the cart
     if (cart.containsKey(productId)) {
-      // Update the quantity in the cart
+      // Updating the quantity in the cart
       setState(() {
         cart[productId]['quantity'] = newQuantity;
       });
 
-      // Recalculate total and delivery charges after updating quantity
+      // Recalculating total and delivery charges after updating quantity
       double newTotal = 0;
       double newDelivery = 0.0;
 
@@ -446,45 +440,13 @@ class _CartPageState extends State<CartPage> {
 
       newDelivery = newTotal * 0.05;
 
-      // Call setState to update the total and delivery charges
+      // updating the total and delivery charges
       setState(() {
         var total = newTotal;
         var delivery = newDelivery;
       });
     }
   }
-
-  // void checkout(double total, double delivery) {
-  //   double totalPrice = total + delivery;
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(
-  //           'Order Confirmation',
-  //           style: customTextStyle.copyWith(
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //         content: Text(
-  //             'Your order was received successfully.\n\nTotal Price: $totalPrice birr',
-  //             style: customTextStyle.copyWith(
-  //               fontWeight: FontWeight.bold,
-  //             )),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               clearCart();
-  //               Navigator.pop(context);
-  //             },
-  //             child: Text('OK'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void clearCart() {
     setState(() {

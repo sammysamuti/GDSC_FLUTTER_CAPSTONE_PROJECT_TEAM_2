@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // Use GetMaterialApp instead of MaterialApp
+      // Using GetMaterialApp instead of MaterialApp
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,7 +26,6 @@ class _MyAppState extends State<MyApp> {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       getPages: [
-        // Move GetPage to the getPages parameter
         GetPage(
           name: '/cart',
           page: () => CartPage(),
@@ -56,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Navigate to the CartPage using GetX
+            // Navigating to the CartPage using GetX
             Get.toNamed('/cart');
           },
           child: Text('Cart Page'),

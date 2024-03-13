@@ -42,14 +42,13 @@ class CustomPaymentTile extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.grey[200], // Set the background color
+                    color: Colors.grey[200],
                   ),
                   child: Align(
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.check,
-                      color:
-                          Color(0xFF6055D8), // Set the color of the check icon
+                      color: Color(0xFF6055D8),
                     ),
                   ),
                 ),
@@ -288,8 +287,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
                 CustomPaymentTile(
                   paymentMethod: 'Cash',
-                  imagePath:
-                      'assets/checkout/cash.png', // Replace with the actual path
+                  imagePath: 'assets/checkout/cash.png',
                   isSelected: selectedPaymentMethod == 'Cash',
                   onChanged: (value) {
                     setState(() {
@@ -307,7 +305,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.grey[200], // Set the background color
+                          color: Colors.grey[200],
                         ),
                         child: Align(
                           alignment: Alignment.center,
@@ -320,7 +318,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ],
                   ),
                   onTap: () {
-                    // Handle the action for adding a new payment method
+                    // Handling the action for adding a new payment method
                   },
                 ),
               ],
@@ -367,7 +365,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         return AlertDialog(
           title: Text('Credit Card Details'),
           content: Container(
-            width: 300, // Set the width to your desired value
+            width: 300,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -394,16 +392,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             TextButton(
               onPressed: () {
-                // Validate credit card details (you may want to add more validation)
+                // Validating credit card details (you may want to add more validation)
                 String cardNumber = cardNumberController.text.trim();
                 String cvc = cvcController.text.trim();
 
                 if (cardNumber.isEmpty || cvc.isEmpty) {
-                  // Show an error message or handle the validation as needed
+                  // Showing an error message or handle the validation as needed
                   // For simplicity, I'm just printing an error message here
                   print('Please enter valid credit card details');
                 } else {
-                  // Proceed with checkout logic (you can customize this part)
                   Navigator.of(context).pop();
                   _handleCheckout();
                 }
@@ -426,7 +423,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // Clear the order summary and close the alert
+                // Clearing the order summary and close the alert
                 Navigator.of(context).pop();
                 _clearOrderSummary(widget.total, widget.delivery);
                 widget.clearCartCallback();
@@ -442,25 +439,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _clearOrderSummary(double total, double delivery) {
     setState(() {
       widget.cart.clear();
-      // Reset total and delivery to initial values or set them to 0
+      // Reseting total and delivery to initial values or set them to 0
       widget.total = 0.0;
       widget.delivery = 0.0;
-      // You may need to update other variables based on your app logic
     });
 
-    // Call checkout function with total and delivery
     _showOrderConfirmation(total, delivery);
   }
 
   void _handleCheckout() {
-    // Assuming you have total and delivery available in your widget
     double total = widget.total;
     double delivery = widget.delivery;
 
-    // Add your checkout logic here
-    // Call _showSuccessAlert() if the payment is successful
-
-    // Call _clearOrderSummary to clear the cart and show the order confirmation
     _clearOrderSummary(total, delivery);
     widget.clearCartCallback();
   }
@@ -485,7 +475,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // Clear cart and close the dialog
+                // Clearing cart and close the dialog
                 _clearCart();
                 Navigator.pop(context);
               },
@@ -497,7 +487,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-// Add this method to clear the cart
   void _clearCart() {
     setState(() {
       widget.cart.clear();
