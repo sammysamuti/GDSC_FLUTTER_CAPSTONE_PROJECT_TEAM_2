@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Import the Get package
-import 'cart.dart'; // Import the CartPage
+import 'package:get/get.dart';
+import 'cart.dart';
 
 void main() {
   runApp(const MyApp());

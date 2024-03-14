@@ -85,7 +85,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     letterSpacing: 0.25,
   );
 
-  String selectedPaymentMethod = 'Paypal'; // Added this line
+  String selectedPaymentMethod = 'Paypal';
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +311,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           alignment: Alignment.center,
                           child: Icon(
                             Icons.add,
-                            color: Colors.blue, // Set the color of the "+" sign
+                            color: Colors.blue,
                           ),
                         ),
                       ),
@@ -392,12 +392,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             TextButton(
               onPressed: () {
-                // Validating credit card details (you may want to add more validation)
+                // Validating credit card details
                 String cardNumber = cardNumberController.text.trim();
                 String cvc = cvcController.text.trim();
 
                 if (cardNumber.isEmpty || cvc.isEmpty) {
-                  // Showing an error message or handle the validation as needed
+                  // Showing an error message
                   // For simplicity, I'm just printing an error message here
                   print('Please enter valid credit card details');
                 } else {
@@ -423,7 +423,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // Clearing the order summary and close the alert
+                // Clearing the order summary and closing the alert
                 Navigator.of(context).pop();
                 _clearOrderSummary(widget.total, widget.delivery);
                 widget.clearCartCallback();
@@ -439,7 +439,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _clearOrderSummary(double total, double delivery) {
     setState(() {
       widget.cart.clear();
-      // Reseting total and delivery to initial values or set them to 0
+      // Reseting total and delivery to initial values to 0
       widget.total = 0.0;
       widget.delivery = 0.0;
     });

@@ -53,21 +53,21 @@ class _CartPageState extends State<CartPage> {
       "productDescription": "Rolex",
       "productPrice": 40,
       "quantity": 2,
-      "underimgURL": "assets/cart/watch.jpg", // Replace with actual image URL
+      "underimgURL": "assets/cart/watch.jpg",
     },
     "2": {
       "productName": "Airpods",
       "productDescription": "Apple",
-      "productPrice": 333, // Default price for testing
+      "productPrice": 333,
       "quantity": 1,
-      "underimgURL": "assets/cart/airpod.jpg" // Replace with actual image URL
+      "underimgURL": "assets/cart/airpod.jpg"
     },
     "3": {
       "productName": "Hoodie",
       "productDescription": "Puma",
-      "productPrice": 333, // Default price for testing
+      "productPrice": 333,
       "quantity": 1,
-      "underimgURL": "assets/cart/hoodie.jpg", // Replace with actual image URL
+      "underimgURL": "assets/cart/hoodie.jpg",
     },
     // Add more items as needed
   };
@@ -77,7 +77,7 @@ class _CartPageState extends State<CartPage> {
     double total = 0;
     double delivery = 0.0;
 
-    // Calculate total and delivery charges
+    // Calculating total and delivery charges
     cart.forEach((productId, item) {
       total += item['productPrice'] * item['quantity'];
     });
@@ -156,8 +156,7 @@ class _CartPageState extends State<CartPage> {
                         width: 130.0,
                         height: 122.0,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Adjust the radius as needed
+                          borderRadius: BorderRadius.circular(10.0),
                           child: Image.asset(
                             item['underimgURL'],
                             fit: BoxFit.cover,
@@ -182,8 +181,8 @@ class _CartPageState extends State<CartPage> {
                               Text(
                                 item['productDescription'],
                                 style: customTextStyle.copyWith(
-                                  color: Colors.grey, // Light gray color
-                                  fontSize: 12.0, // Font size small
+                                  color: Colors.grey,
+                                  fontSize: 12.0,
                                 ),
                               ),
                               SizedBox(height: 8.0),
@@ -239,7 +238,6 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
 
-                              // Add space between incrementer and decrementer
                               SizedBox(width: 8.0),
 
                               Padding(
