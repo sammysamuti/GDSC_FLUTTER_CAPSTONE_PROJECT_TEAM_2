@@ -103,7 +103,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               shape: BoxShape.circle,
               color: Colors.grey[200],
             ),
-            child: Center(
+            child:const Center(
               child: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
