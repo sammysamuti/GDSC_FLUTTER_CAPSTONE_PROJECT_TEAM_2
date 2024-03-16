@@ -69,6 +69,8 @@ flutter:
     - assets/cart/
     - assets/checkout/
     - assets/details/
+    - assets/front/
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
