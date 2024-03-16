@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'cart.dart';
-
+import 'orderhistory.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -27,8 +27,8 @@ class _MyAppState extends State<MyApp> {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       getPages: [
         GetPage(
-          name: '/cart',
-          page: () => CartPage(),
+          name: '/orderhistory',
+          page: () => OrderHistory(),
         ),
       ],
     );
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ElevatedButton(
           onPressed: () {
             // Navigating to the CartPage using GetX
-            Get.toNamed('/cart');
+            Get.toNamed('/orderhistory');
           },
           child: Text('Cart Page'),
         ),
