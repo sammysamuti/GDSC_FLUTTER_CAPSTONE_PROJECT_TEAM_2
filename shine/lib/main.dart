@@ -1,65 +1,169 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'cart.dart';
-//test 123
+import 'dart:async';
+import 'signin.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key); // Added a named 'key' parameter
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      // Using GetMaterialApp instead of MaterialApp
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      getPages: [
-        GetPage(
-          name: '/cart',
-          page: () => CartPage(),
-        ),
-      ],
+      title: 'E-commerce App',
+      home: ImageSlideshow(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title});
-
-  final String title;
+class ImageSlideshow extends StatefulWidget {
+  const ImageSlideshow({Key? key})
+      : super(key: key); // Added a named 'key' parameter
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ImageSlideshowState createState() =>
+      ImageSlideshowState(); // Made the state class public
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class ImageSlideshowState extends State<ImageSlideshow> {
+  final List<String> images = [
+    'assets/img1.jpg',
+    'assets/img2.jpg',
+    'assets/img3.jpg',
+    'assets/img4.jpg',
+  ];
+  int _currentPage = 0;
+  final PageController _controller = PageController(initialPage: 0);
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) {
+      if (_currentPage < images.length - 1) {
+        _controller.animateToPage(
+          _currentPage + 1,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      } else {
+        _controller.animateToPage(
+          0,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigating to the CartPage using GetX
-            Get.toNamed('/cart');
-          },
-          child: Text('Cart Page'),
-        ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: PageView.builder(
+              controller: _controller,
+              itemCount: images.length,
+              onPageChanged: (int page) {
+                setState(() {
+                  _currentPage = page;
+                });
+              },
+              itemBuilder: (_, index) {
+                return Image.asset(
+                  images[index],
+                  fit: BoxFit.cover,
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: RichText(
+              text: const TextSpan(
+                text: 'Welcome to Our Shop!',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 32),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '\n',
+                    style: TextStyle(fontSize: 36, height: 10),
+                  ),
+                  TextSpan(
+                    text:
+                        'Lorem ipsum dolor sit amet, consecutetur adipiscing elit sed do eisumod tempor',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List<Widget>.generate(images.length, (int index) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 10,
+                width: 10,
+                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: _currentPage == index
+                      ? const Color.fromARGB(255, 103, 31, 136)
+                      : Colors.grey.withOpacity(0.5),
+                ),
+              );
+            }),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignInPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('GET STARTED'),
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
