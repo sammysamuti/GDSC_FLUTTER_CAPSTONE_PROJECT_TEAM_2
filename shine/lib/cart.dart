@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shine/product_page.dart';
 import 'checkout.dart';
+import 'orders.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     _CartPageState cartPage = _CartPageState();
     return GetMaterialApp(
-      home: CartPage(),
+      home: CartPage(addToCart: cartPage.addToCart),
       getPages: [
         GetPage(
           name: '/checkout',
@@ -35,8 +39,14 @@ class MyApp extends StatelessWidget {
 }
 
 class CartPage extends StatefulWidget {
+  // ignore: library_private_types_in_public_api
+  // final _CartPageState cartPage;
+  final void Function(MyProduct) addToCart;
+  final MyProduct? product;
+  const CartPage({Key? key, required this.addToCart, this.product})
+      : super(key: key);
   @override
-  State<CartPage> createState() => _CartPageState();
+  _CartPageState createState() => _CartPageState();
 }
 
 const TextStyle customTextStyle = TextStyle(
@@ -47,40 +57,51 @@ const TextStyle customTextStyle = TextStyle(
 );
 
 class _CartPageState extends State<CartPage> {
-  Map<String, dynamic> cart = {
-    "1": {
-      "productName": "Watch",
-      "productDescription": "Rolex",
-      "productPrice": 40,
-      "quantity": 2,
-      "underimgURL": "assets/cart/watch.jpg",
-    },
-    "2": {
-      "productName": "Airpods",
-      "productDescription": "Apple",
-      "productPrice": 333,
-      "quantity": 1,
-      "underimgURL": "assets/cart/airpod.jpg"
-    },
-    "3": {
-      "productName": "Hoodie",
-      "productDescription": "Puma",
-      "productPrice": 333,
-      "quantity": 1,
-      "underimgURL": "assets/cart/hoodie.jpg",
-    },
-    // Add more items as needed
-  };
+  List<MyProduct> cart = [];
+  Map<String, dynamic> cartItems = {};
+
+  void initState() {
+    super.initState();
+    // If product is provided, add it to the cart initially
+    if (widget.product != null) {
+      addToCart(widget.product!);
+    }
+  }
+
+  void addToCart(MyProduct product) {
+    setState(() {
+      cart.add(product);
+    });
+  }
+
+  void removeItem(MyProduct product) {
+    setState(() {
+      cart.remove(product);
+    });
+  }
+
+  void updateQuantity(MyProduct product, int quantity) {
+    setState(() {
+      final index = cart.indexOf(product);
+      cart[index].quantity = quantity;
+    });
+  }
+
+  void clearCart() {
+    setState(() {
+      cart.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double total = 0;
     double delivery = 0.0;
 
-    // Calculating total and delivery charges
-    cart.forEach((productId, item) {
-      total += item['productPrice'] * item['quantity'];
-    });
+    // Calculate total and delivery charges
+    for (var item in cart) {
+      total += (item.price * item.quantity) as double;
+    }
 
     delivery = total * 0.05;
 
@@ -102,7 +123,7 @@ class _CartPageState extends State<CartPage> {
               shape: BoxShape.circle,
               color: Colors.grey[200],
             ),
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
@@ -116,7 +137,7 @@ class _CartPageState extends State<CartPage> {
         actions: [
           Container(
             margin: EdgeInsets.only(right: 16.0),
-            child: IconButton(
+            child: PopupMenuButton<String>(
               icon: Container(
                 width: 40.0,
                 height: 40.0,
@@ -131,8 +152,17 @@ class _CartPageState extends State<CartPage> {
                   ),
                 ),
               ),
-              onPressed: () {
-                print('More options pressed');
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'order_history',
+                  child: Text('Order History'),
+                ),
+                // You can add more options here if needed
+              ],
+              onSelected: (String value) {
+                if (value == 'order_history') {
+                  navigateToOrderHistory(context);
+                }
               },
             ),
           ),
@@ -144,9 +174,7 @@ class _CartPageState extends State<CartPage> {
             child: ListView.builder(
               itemCount: cart.length,
               itemBuilder: (context, index) {
-                String productId = cart.keys.elementAt(index);
-                Map<String, dynamic> item = cart[productId];
-
+                MyProduct product = cart[index];
                 return Card(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,9 +184,11 @@ class _CartPageState extends State<CartPage> {
                         width: 130.0,
                         height: 122.0,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(
+                              10.0), // Adjust the radius as needed
                           child: Image.asset(
-                            item['underimgURL'],
+                            // item['underimgURL'],
+                            product.image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -172,22 +202,22 @@ class _CartPageState extends State<CartPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                item['productName'],
+                                product.name,
                                 style: customTextStyle.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 8.0),
+                              const SizedBox(height: 8.0),
                               Text(
-                                item['productDescription'],
+                                product.description,
                                 style: customTextStyle.copyWith(
                                   color: Colors.grey,
                                   fontSize: 12.0,
                                 ),
                               ),
-                              SizedBox(height: 8.0),
+                              const SizedBox(height: 8.0),
                               Text(
-                                ' \$${item['productPrice']}',
+                                '\$${product.price.toStringAsFixed(2)}',
                                 style: customTextStyle.copyWith(
                                   color: Color(0xFF6055D8),
                                   fontWeight: FontWeight.bold,
@@ -204,14 +234,13 @@ class _CartPageState extends State<CartPage> {
                         children: [
                           // Delete icon
                           IconButton(
-                            icon: Icon(Icons.delete,
+                            icon: const Icon(Icons.delete,
                                 color: Color.fromARGB(246, 212, 66, 66)),
                             onPressed: () {
-                              removeItem(productId);
+                              removeItem(product);
                             },
                           ),
 
-                          // Add space between delete icon and incrementer
                           SizedBox(height: 8.0),
 
                           // Row for incrementer and decrementer
@@ -221,16 +250,15 @@ class _CartPageState extends State<CartPage> {
                               // Incrementer
                               GestureDetector(
                                 onTap: () {
-                                  updateQuantity(
-                                      productId, item['quantity'] + 1);
+                                  updateQuantity(product, product.quantity + 1);
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
+                                  padding: const EdgeInsets.all(6.0),
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Color(0xFF6055D8),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add,
                                     color: Colors.white,
                                     size: 18.0,
@@ -238,12 +266,13 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
 
+                              // Add space between incrementer and decrementer
                               SizedBox(width: 8.0),
 
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
-                                  ' ${item['quantity']}',
+                                  ' ${product.quantity}',
                                   style: customTextStyle.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -253,18 +282,18 @@ class _CartPageState extends State<CartPage> {
                               // Decrementer
                               GestureDetector(
                                 onTap: () {
-                                  if (item['quantity'] > 1) {
+                                  if (product.quantity > 1) {
                                     updateQuantity(
-                                        productId, item['quantity'] - 1);
+                                        product, product.quantity - 1);
                                   }
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
+                                  padding: const EdgeInsets.all(6.0),
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Color(0xFF6055D8),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.remove,
                                     color: Colors.white,
                                     size: 18.0,
@@ -387,25 +416,29 @@ class _CartPageState extends State<CartPage> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => CheckoutPage(
-                      cart: cart,
-                      total: total,
-                      delivery: delivery,
-                      clearCartCallback: clearCart,
-                    ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CheckoutPage(
+                            cart: cart,
+                            total: total,
+                            delivery: delivery,
+                            clearCartCallback: clearCart,
+                          )),
+                );
               },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF6055D8)),
+                minimumSize: MaterialStateProperty.all<Size>(
+                    const Size(double.infinity, 50)),
+              ),
               child: Text(
                 'Checkout',
                 style: customTextStyle.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xFF6055D8)),
-                minimumSize:
-                    MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
               ),
             ),
           ),
@@ -414,41 +447,29 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void removeItem(String productId) {
-    setState(() {
-      cart.remove(productId);
-    });
-  }
-
-  void updateQuantity(String productId, int newQuantity) {
-    // Ensuring the product exists in the cart
-    if (cart.containsKey(productId)) {
-      // Updating the quantity in the cart
-      setState(() {
-        cart[productId]['quantity'] = newQuantity;
+  void navigateToOrderHistory(BuildContext context) {
+    if (cart.isNotEmpty) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderHistory(cartItems: cartItems),
+          ),
+        );
       });
-
-      // Recalculating total and delivery charges after updating quantity
-      double newTotal = 0;
-      double newDelivery = 0.0;
-
-      cart.forEach((productId, item) {
-        newTotal += item['productPrice'] * item['quantity'];
-      });
-
-      newDelivery = newTotal * 0.05;
-
-      // updating the total and delivery charges
-      setState(() {
-        var total = newTotal;
-        var delivery = newDelivery;
-      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderHistory(cartItems: cartItems),
+        ),
+      );
     }
   }
+}
 
-  void clearCart() {
-    setState(() {
-      cart.clear();
-    });
-  }
+@override
+Widget build(BuildContext context) {
+  // TODO: implement build
+  throw UnimplementedError();
 }
