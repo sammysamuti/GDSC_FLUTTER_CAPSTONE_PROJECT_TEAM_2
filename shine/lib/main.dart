@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'cart.dart';
-<<<<<<< HEAD
 import 'orderhistory.dart';
-=======
-//test 123
->>>>>>> 78df2d3b5efcbe92140b1d13a61c51c613e07cd6
+
 void main() {
   runApp(const MyApp());
 }
