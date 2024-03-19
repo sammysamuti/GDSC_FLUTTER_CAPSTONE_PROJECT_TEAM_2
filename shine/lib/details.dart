@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'cart.dart';
 
 class Details extends StatelessWidget {
@@ -76,6 +77,8 @@ class Details extends StatelessWidget {
                 ),
               ],
             ),
+
+            //product name
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -89,6 +92,7 @@ class Details extends StatelessWidget {
                 ),
               ),
             ),
+            //product price
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Align(
