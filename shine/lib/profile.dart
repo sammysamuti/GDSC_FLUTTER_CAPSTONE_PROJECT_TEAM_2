@@ -1,23 +1,30 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
+import './pages/Sign_up/page2.dart';
+import './filter.dart';
 
 void main() {
   runApp(const ProfileApp());
 }
 
 class ProfileApp extends StatelessWidget {
-  const ProfileApp({super.key});
+  const ProfileApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ProfilePage(),
+      home: ProfilePage(userName: 'YourUserName'),
     );
   }
 }
 
 class ProfilePage extends StatelessWidget {
+  final String userName;
+
+  const ProfilePage({
+    Key? key,
+    required this.userName,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,52 +40,68 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20.0),
-            const Text(
-              'Mark Adam',
-              style: TextStyle(
+            Text(
+              userName,
+              style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 5.0),
-            const Text(
-              'Sunny_Koelpin45@hotmail.com',
-              style: TextStyle(
+            Text(
+              '${userName}@gmail.com',
+              style: const TextStyle(
                 fontSize: 16.0,
                 color: Colors.grey,
               ),
             ),
             const SizedBox(height: 20.0),
-            const NavigationButton(
+            NavigationButton(
               text: 'Profile',
               icon: Icons.person,
               showArrowIcon: true,
             ),
-            const NavigationButton(
+            NavigationButton(
               text: 'Settings',
               icon: Icons.settings,
               showArrowIcon: true,
             ),
-            const NavigationButton(
+            NavigationButton(
               text: 'Contact',
               icon: Icons.mail,
               showArrowIcon: true,
             ),
-            const NavigationButton(
+            NavigationButton(
               text: 'Share App',
               icon: Icons.share,
               showArrowIcon: true,
             ),
-            const NavigationButton(
+            NavigationButton(
               text: 'Help',
               icon: Icons.help,
               showArrowIcon: true,
+            ),
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(Icons.filter),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FilterPage()),
+                  );
+                },
+              ),
             ),
             const Spacer(),
             Align(
               alignment: Alignment.center,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignIn_Screen()),
+                  );
+                },
                 child: const Text(
                   'Sign Out',
                   style: TextStyle(
@@ -88,7 +111,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20.0), // Add spacing between navigation buttons and bottom buttons
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -139,7 +162,7 @@ class BottomIconButton extends StatelessWidget {
     required this.icon,
     required this.isActive,
     required this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,65 +175,25 @@ class BottomIconButton extends StatelessWidget {
     );
   }
 }
+
 class NavigationButton extends StatelessWidget {
   final String text;
   final IconData icon;
   final bool showArrowIcon;
-  final bool isSignOutButton;
 
   const NavigationButton({
     Key? key,
     required this.text,
     required this.icon,
-    this.showArrowIcon = false,
-    this.isSignOutButton = false,
-  });
+    required this.showArrowIcon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // ignore: sized_box_for_whitespace
-    return Container(
-      height: 48.0,
-      child: TextButton(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          alignment: Alignment.centerLeft,
-          foregroundColor: Colors.black,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 24.0,
-                  height: 24.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(width: 10.0),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: isSignOutButton
-                        ? Colors.red
-                        : const Color.fromARGB(255, 5, 5, 5),
-                  ),
-                ),
-              ],
-            ),
-            if (showArrowIcon) const Icon(Icons.chevron_right),
-          ],
-        ),
-      ),
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(text),
+      trailing: showArrowIcon ? Icon(Icons.arrow_forward_ios) : null,
     );
   }
 }

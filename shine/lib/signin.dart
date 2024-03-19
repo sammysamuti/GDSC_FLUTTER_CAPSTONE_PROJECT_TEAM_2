@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'dart:async';
-// import 'main.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -11,7 +9,7 @@ class SignInPage extends StatefulWidget {
 class SignInPageState extends State<SignInPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _obscureText = true; // define _obscureText variable here
+  bool _obscureText = true;
 
   final _formKey = GlobalKey<FormState>();
 

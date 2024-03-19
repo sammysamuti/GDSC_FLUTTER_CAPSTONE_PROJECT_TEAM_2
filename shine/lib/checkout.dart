@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shine/product_page.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class CustomPaymentTile extends StatelessWidget {
   final String paymentMethod;
@@ -15,7 +17,7 @@ class CustomPaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle customTextStyle1 = TextStyle(
+    TextStyle customTextStyle1 = const TextStyle(
       fontFamily: 'Poppins',
       fontSize: 15.0,
       letterSpacing: 0.25,
@@ -44,7 +46,7 @@ class CustomPaymentTile extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.grey[200],
                   ),
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.check,
@@ -63,32 +65,37 @@ class CustomPaymentTile extends StatelessWidget {
 }
 
 class CheckoutPage extends StatefulWidget {
-  final Map<String, dynamic> cart;
-  double total = 0.0;
-  double delivery = 0.0;
+  final List<MyProduct> cart;
+  double total;
+  double delivery;
   final VoidCallback clearCartCallback;
-  CheckoutPage(
-      {required this.cart,
-      required this.total,
-      required this.delivery,
-      required this.clearCartCallback});
+
+  CheckoutPage({
+    required this.cart,
+    required this.total,
+    required this.delivery,
+    required this.clearCartCallback,
+  });
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  TextStyle customTextStyle = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontFamily: 'Poppins',
-    fontSize: 17.0,
-    letterSpacing: 0.25,
-  );
+  final DatabaseReference _cartReference =
+      FirebaseDatabase.instance.reference().child('cart');
 
   String selectedPaymentMethod = 'Paypal';
 
   @override
   Widget build(BuildContext context) {
+    TextStyle customTextStyle = const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontFamily: 'Poppins',
+      fontSize: 17.0,
+      letterSpacing: 0.25,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -103,7 +110,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               shape: BoxShape.circle,
               color: Colors.grey[200],
             ),
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
@@ -125,7 +132,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   shape: BoxShape.circle,
                   color: Colors.grey[200],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.location_on,
                   color: Color(0xFF6055D8),
                 ),
@@ -140,12 +147,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             ListTile(
               leading: Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.grey[200],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.access_time_filled,
                   color: Color(0xFF6055D8),
                 ),
@@ -159,8 +166,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 8.0, left: 8.0, right: 8.0, bottom: 4.0),
+              padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +313,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           shape: BoxShape.circle,
                           color: Colors.grey[200],
                         ),
-                        child: Align(
+                        child: const Align(
                           alignment: Alignment.center,
                           child: Icon(
                             Icons.add,
@@ -331,24 +337,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
         child: ElevatedButton(
           onPressed: () {
             if (selectedPaymentMethod == 'Cash') {
-              // Simulate successful payment for Cash method
               _showSuccessAlert(context);
             } else {
               _showCreditCardAlert(context);
             }
           },
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Color(0xFF6055D8)),
+            minimumSize:
+                MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+          ),
           child: Text(
             'Checkout',
             style: customTextStyle.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-          ),
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF6055D8)),
-            minimumSize:
-                MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
           ),
         ),
       ),
@@ -371,13 +376,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               children: [
                 TextField(
                   controller: cardNumberController,
-                  decoration: InputDecoration(labelText: 'Credit Card Number'),
+                  decoration:
+                      const InputDecoration(labelText: 'Credit Card Number'),
                   keyboardType: TextInputType.number,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   controller: cvcController,
-                  decoration: InputDecoration(labelText: 'CVC'),
+                  decoration: const InputDecoration(labelText: 'CVC'),
                   keyboardType: TextInputType.number,
                 ),
               ],
@@ -388,24 +394,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                // Validating credit card details
                 String cardNumber = cardNumberController.text.trim();
                 String cvc = cvcController.text.trim();
 
                 if (cardNumber.isEmpty || cvc.isEmpty) {
-                  // Showing an error message
-                  // For simplicity, I'm just printing an error message here
                   print('Please enter valid credit card details');
                 } else {
                   Navigator.of(context).pop();
                   _handleCheckout();
                 }
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
@@ -418,17 +421,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Payment Successful'),
-          content: Text('Your payment is successful!'),
+          title: const Text('Payment Successful'),
+          content: const Text('Your payment is successful!'),
           actions: [
             TextButton(
               onPressed: () {
-                // Clearing the order summary and closing the alert
                 Navigator.of(context).pop();
                 _clearOrderSummary(widget.total, widget.delivery);
                 widget.clearCartCallback();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -437,9 +439,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void _clearOrderSummary(double total, double delivery) {
+    DatabaseReference orderRef =
+        FirebaseDatabase.instance.reference().child('orders').push();
+    orderRef.set({
+      'total': total,
+      'delivery': delivery,
+      'paymentMethod': selectedPaymentMethod,
+      'items': widget.cart
+          .map((product) => {
+                'name': product.name,
+                'price': product.price,
+                'quantity': product.quantity,
+              })
+          .toList(),
+    });
+
     setState(() {
       widget.cart.clear();
-      // Reseting total and delivery to initial values to 0
       widget.total = 0.0;
       widget.delivery = 0.0;
     });
@@ -462,20 +478,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
         return AlertDialog(
           title: Text(
             'Order Confirmation',
-            style: customTextStyle.copyWith(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           content: Text(
             'Your order was received successfully.\n\nTotal Price: \$${total + delivery}',
-            style: customTextStyle.copyWith(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                // Clearing cart and close the dialog
                 _clearCart();
                 Navigator.pop(context);
               },
