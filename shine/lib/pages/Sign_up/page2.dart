@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shine/pages/HomeScreen/HomeScreen.dart';
 import 'package:shine/pages/Sign_up/page3.dart';
 
+import '../adminpage/addnewproduct.dart';
+
 class SignIn_Screen extends StatefulWidget {
   SignIn_Screen({Key? key}) : super(key: key);
 
@@ -166,12 +168,21 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
       );
       if (userCredential.user != null) {
         print("User is successfully signed in");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(userEmail: email.text),
-          ),
-        );
+        if (email.text == 'admin@gmail.com') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddNewProduct(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(userEmail: email.text),
+            ),
+          );
+        }
         _showSnackBar("User is successfully signed in");
       }
     } catch (e) {
