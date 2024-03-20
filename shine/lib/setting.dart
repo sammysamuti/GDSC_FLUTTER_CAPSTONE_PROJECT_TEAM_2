@@ -48,6 +48,12 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       
       appBar: AppBar(
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         title: const Text('Settings'),
         centerTitle: true,
       ),
@@ -117,6 +123,14 @@ class SettingsPage extends StatelessWidget {
                     ),
                     const Spacer(),
                     const Icon(Icons.navigate_next),
+                    onTap: () {
+                  // Navigate to the user profile page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfilePage()),
+                  );
+                },
                   ],
                 ),
               ),
@@ -149,26 +163,70 @@ class SettingsPage extends StatelessWidget {
                 buildSettingItem(
                   icon: Icons.notifications,
                   title: 'Notifications',
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to the user notification page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationsPage()),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
                   icon: Icons.language_rounded,
                   title: 'Language',
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to the user languages page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LanguagesPage()),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
                   icon: Icons.privacy_tip_sharp,
                   title: 'Privacy',
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to the user privacy page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PrivacyPage()),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
                   icon: Icons.help_center,
                   title: 'Help Center',
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to the user help page
+                            Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HelpPage()),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
                   icon: Icons.info,
                   title: 'About Us',
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to the user profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutPage()),
+                    );
+                  },
                 ),
               ],
             ),
