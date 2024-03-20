@@ -156,22 +156,13 @@ class SettingsPage extends StatelessWidget {
                 buildSettingItem(
                   icon: Icons.notifications,
                   title: 'Notifications',
-                  trailing: const Icon(Icons.arrow_forward_ios),
                   
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
                   icon: Icons.language_rounded,
                   title: 'Language',
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    // Navigate to the user languages page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LanguagesPage()),
-                    );
-                  },
+                  
                 ),
                 const SizedBox(height: 20.0),
                 buildSettingItem(
